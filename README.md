@@ -1,14 +1,15 @@
 ### Deploy Ubuntu Server To U Disk
 
-Related Reference for Ubuntu Server:<p>
-[*Offical Information*](http://www.ubuntu.com/server)
+##### Related Reference for Ubuntu Server
+  [**Offical Information**](http://www.ubuntu.com/server)
 
-Download Path for Ubuntu Server:<p>
-[*Download*](http://www.ubuntu.com/download/server/thank-you?country=SG&version=16.04&architecture=amd64)
+##### Download Path for Ubuntu Server
+  [**Download**](http://www.ubuntu.com/download/server/thank-you?country=SG&version=16.04&architecture=amd64)
 
 ##### Precondition
-Software: ubuntu-16.04-server-amd64.iso<p>
-Hardware: 16G U Disk<p>
+  Software: ubuntu-16.04-server-amd64.iso<p>
+  Hardware: 16G U Disk<p>
+  Script: deploy.sh<p>
 
 ##### Procedure
 + Processed U Disk<p>
@@ -16,7 +17,7 @@ Hardware: 16G U Disk<p>
 `fdisk /dev/sda`<p>
 `mkfs.ext4 /dev/sda1`<p>
 
-+ Download Ubuntu Core Image<p>
++ Download Ubuntu Server Image<p>
 *PS: Suppose the download folder is 'tmp' folder.*<p>
 
 + Run Shell Script<p>
