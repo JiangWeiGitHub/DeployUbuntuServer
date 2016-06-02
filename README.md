@@ -9,7 +9,7 @@
 + **Precondition**<p>
   Software: *ubuntu-16.04-server-amd64.iso*<p>
   Hardware: *16G U Disk*<p>
-  Script: *deploy.sh*<p>
+  Script: *Deploy.sh*<p>
 
 + **Procedure**<p>
  - Processed U Disk<p>
@@ -21,6 +21,6 @@
  *PS: Suppose the download folder is 'tmp' folder.*<p>
 
  - Run Shell Script<p>
- *PS: Go into 'tmp' folder, copy 'deploy.sh' here and run it.*<p>
+ *PS: Go into 'tmp' folder, copy 'Deploy.sh' here and run it.*<p>
 
 
