@@ -50,7 +50,7 @@ then
 fi
 
 tar Jxf $node_package_name
-\mv -f ./$node_home_path/* $system_run_path
+\cp -f ./$node_home_path/* $system_run_path
 
 #
 # install docker
@@ -63,7 +63,13 @@ then
 fi
 
 tar zxf $docker_package_name
-\mv -f ./$docker_home_path/* $system_run_path/bin/
+\cp -f ./$docker_home_path/* $system_run_path/bin/
+
+#
+# cleanup
+#
+cd ..
+rm -rf tmp
 
 #systemctl stop docker
 #
