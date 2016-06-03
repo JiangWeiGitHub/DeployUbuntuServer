@@ -63,7 +63,7 @@ then
 fi
 
 tar zxf $docker_package_name
-\mv -f ./$docker_home_path/* $system_run_path
+\mv -f ./$docker_home_path/* $system_run_path/bin/
 
 #systemctl stop docker
 #
