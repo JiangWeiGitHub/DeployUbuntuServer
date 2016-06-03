@@ -50,7 +50,7 @@ then
 fi
 
 tar Jxf $node_package_name
-\mv -f ./$node_home_path/$node_home_path/* $system_run_path
+\mv -f ./$node_home_path/* $system_run_path
 
 #
 # install docker
