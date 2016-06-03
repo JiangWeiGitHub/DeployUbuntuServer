@@ -55,7 +55,7 @@ tar Jxf $node_package_name
 wget $docker_download_path
 if [ $? != 0 ]
 then
-   echo "Download nodejs package failed!"
+   echo "Download docker package failed!"
    exit 110
 fi
 
