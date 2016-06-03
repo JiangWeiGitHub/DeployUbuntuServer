@@ -56,7 +56,7 @@ wget $docker_download_path
 if [ $? != 0 ]
 then
    echo "Download docker package failed!"
-   exit 110
+   exit 120
 fi
 
 tar zxf $docker_package_name
