@@ -25,7 +25,7 @@ system_run_path="/usr/local"
 #
 # install some essential packages for docker
 #
-apt-get -y install xz-utils git
+apt-get -y install xz-utils git aufs-tools
 
 #
 # install avahi packages
