@@ -71,7 +71,6 @@ tar zxf $docker_package_name
 cd ..
 rm -rf tmp
 
-
 #
 # add 'Restart=always' to /lib/systemd/system/avahi-daemon.service
 #
@@ -90,4 +89,3 @@ do
 done
 
 mv tmp.service /lib/systemd/system/avahi-daemon.service
-
