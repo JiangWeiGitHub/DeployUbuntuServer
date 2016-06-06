@@ -71,8 +71,23 @@ tar zxf $docker_package_name
 cd ..
 rm -rf tmp
 
-#systemctl stop docker
+
 #
-#nano /lib/systemd/system/avahi-daemon.service
-#Restart=always
+# add 'Restart=always' to /lib/systemd/system/avahi-daemon.service
 #
+IFS="
+"
+
+touch tmp.service
+
+for i in `cat /lib/systemd/system/avahi-daemon.service`
+do
+  echo $i >> tmp.service
+  if [ $i = "[Service]" ]
+  then
+    echo "Restart=always" >> tmp.service
+  fi
+done
+
+mv tmp.service /lib/systemd/system/avahi-daemon.service
+
