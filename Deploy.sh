@@ -71,36 +71,60 @@ apt-get update
 apt-get -y install linux-image-extra-$(uname -r) apparmor
 apt-get -y install docker-engine
 
-# Set some softwares' initial value
-systemctl enable systemd-networkd
-systemctl enable systemd-resolved
-systemctl enable avahi-daemon
-systemctl disable docker
-
 #
 # Related deployment with appifi bootstrap
 #
+
+# Get files
 mkdir -p /wisnuc/appifi /wisnuc/appifi-tarball /wisnuc/appifi-tmp /wisnuc/bootstrap
 wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap-update/master/appifi-bootstrap-update.packed.js
 mv appifi-bootstrap-update.packed.js /wisnuc/bootstrap
 wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap/master/appifi-bootstrap.js.sha1
 mv appifi-bootstrap.js.sha1 /wisnuc/bootstrap
 
+# Appifi Bootstrap Service
 echo "[Unit]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "Description=Appifi Bootstrap Server" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "After=network.target" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Description=Appifi Bootstrap Server" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "After=network.target" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
 
-echo "[Service]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "Type=idle" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "ExecStartPre=mv /wisnuc/bootstrap/appifi-bootstrap.js.sha1 /wisnuc/bootstrap/appifi-bootstrap.js" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "ExecStart=/usr/local/bin/node /wisnuc/bootstrap/appifi-bootstrap.js" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "TimeoutStartSec=3" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "Restart=always" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "[Service]" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Type=idle" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "ExecStartPre=cp /wisnuc/bootstrap/appifi-bootstrap.js.sha1 /wisnuc/bootstrap/appifi-bootstrap.js" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "ExecStart=/usr/local/bin/node /wisnuc/bootstrap/appifi-bootstrap.js" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "TimeoutStartSec=3" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Restart=always" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
 
-echo "[Install]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
-echo "WantedBy=multi-user.target" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "[Install]" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+
+# Appifi Bootstrap Update Service
+echo "[Unit]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+echo "Description=Appifi Bootstrap Update" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+echo "" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+echo "[Service]" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+echo "Type=simple" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+echo "ExecStart=/usr/local/bin/node /wisnuc/bootstrap/appifi-bootstrap-update.packed.js" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.service
+
+# Appifi Bootstrap Update Service Timer
+echo "[Unit]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "Description=Runs Appifi Bootstrap Update every 4 hour" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "[Timer]" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "OnBootSec=1min" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "OnUnitActiveSec=4h" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "Unit=appifi-bootstrap-update.service" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "[Install]" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/multi-user.target.wants/appifi-bootstrap-update.timer
+
+# Set some softwares' initial value
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+systemctl enable avahi-daemon
+systemctl disable docker
+systemctl enable appifi-bootstrap-update.timer
 
 #
 # cleanup
