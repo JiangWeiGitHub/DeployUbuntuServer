@@ -32,11 +32,6 @@ node_home_path="node-v6.2.2-linux-x64"
 system_run_path="/usr/local"
 
 #
-# install some essential packages for docker
-#
-apt-get -y install xz-utils git aufs-tools
-
-#
 # install avahi packages
 #
 apt-get -y install avahi-daemon avahi-utils
@@ -61,6 +56,11 @@ tar Jxf $node_package_name
 \cp -rf ./$node_home_path/* $system_run_path
 
 #
+# install some essential packages for docker
+#
+apt-get -y install xz-utils git aufs-tools
+
+#
 # install docker
 #
 apt-get update
@@ -71,12 +71,39 @@ apt-get update
 apt-get -y install linux-image-extra-$(uname -r) apparmor
 apt-get -y install docker-engine
 
+# Set some softwares' initial value
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+systemctl enable avahi-daemon
+systemctl disable docker
+
+#
+# Related deployment with appifi bootstrap
+#
+mkdir -p /wisnuc/appifi /wisnuc/appifi-tarball /wisnuc/appifi-tmp /wisnuc/bootstrap
+wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap-update/master/appifi-bootstrap-update.packed.js
+mv appifi-bootstrap-update.packed.js /wisnuc/bootstrap
+wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap/master/appifi-bootstrap.js.sha1
+mv appifi-bootstrap.js.sha1 /wisnuc/bootstrap
+
+echo "[Unit]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Description=Appifi Bootstrap Server" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "After=network.target" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+
+echo "[Service]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Type=idle" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "ExecStartPre=mv /wisnuc/bootstrap/appifi-bootstrap.js.sha1 /wisnuc/bootstrap/appifi-bootstrap.js" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "ExecStart=/usr/local/bin/node /wisnuc/bootstrap/appifi-bootstrap.js" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "TimeoutStartSec=3" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "Restart=always" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+
+echo "[Install]" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+echo "WantedBy=multi-user.target" > /etc/systemd/system/multi-user.target.wants/appifi-bootstrap.service
+
 #
 # cleanup
 #
 cd ..
 rm -rf tmp
-
-systemctl enable systemd-networkd
-systemctl enable systemd-resolved
-systemctl disable docker
