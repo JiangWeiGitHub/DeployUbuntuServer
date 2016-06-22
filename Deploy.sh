@@ -64,7 +64,7 @@ tar Jxf $node_package_name
 # install docker
 #
 apt-get update
-apt-get install apt-transport-https ca-certificates
+apt-get -y install apt-transport-https ca-certificates
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 F76221572C52609D
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" > /etc/apt/sources.list.d/docker.list
 apt-get update
