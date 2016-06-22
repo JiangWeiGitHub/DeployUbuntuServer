@@ -76,7 +76,7 @@ apt-get -y install docker-engine
 #
 
 # Get files
-mkdir -p /wisnuc/appifi /wisnuc/appifi-tarball /wisnuc/appifi-tmp /wisnuc/bootstrap
+mkdir -p /wisnuc/appifi /wisnuc/appifi-tarballs /wisnuc/appifi-tmp /wisnuc/bootstrap
 wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap-update/master/appifi-bootstrap-update.packed.js
 mv appifi-bootstrap-update.packed.js /wisnuc/bootstrap
 wget https://raw.githubusercontent.com/wisnuc/appifi-bootstrap/master/appifi-bootstrap.js.sha1
