@@ -1,24 +1,33 @@
 #!/bin/bash
 
 #
+# Platform: Ubuntu 16.04 server 64bit
+#
+
+#
+# Operation Path: chroot /target
+#
+
+#
 # update apt sourcelist first
 #
+echo "deb http://ubuntu.uestc.edu.cn/ubuntu/ xenial main restricted universe multiverse" > /etc/apt/sources.list
+echo "deb http://ubuntu.uestc.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb http://ubuntu.uestc.edu.cn/ubuntu/ xenial-proposed main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb http://ubuntu.uestc.edu.cn/ubuntu/ xenial-security main restricted universe multiverse" >> /etc/apt/sources.list
+echo "deb http://ubuntu.uestc.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse" >> /etc/apt/sources.list
+
 apt-get update
 
 #
 # define all pathnames
 #
 # version
-# nodejs: 6.2.0
-# docker: 1.11.2 Reference: https://docs.docker.com/engine/installation/binaries/
+# nodejs: 6.2.2
 #
-node_download_path="https://nodejs.org/dist/v6.2.0/node-v6.2.0-linux-x64.tar.xz"
-node_package_name="node-v6.2.0-linux-x64.tar.xz"
-node_home_path="node-v6.2.0-linux-x64"
-
-docker_download_path="https://get.docker.com/builds/Linux/x86_64/docker-1.11.2.tgz"
-docker_package_name="docker-1.11.2.tgz"
-docker_home_path="docker"
+node_download_path="https://nodejs.org/dist/v6.2.2/node-v6.2.2-linux-x64.tar.xz"
+node_package_name="node-v6.2.2-linux-x64.tar.xz"
+node_home_path="node-v6.2.2-linux-x64"
 
 system_run_path="/usr/local"
 
@@ -35,9 +44,8 @@ apt-get -y install avahi-daemon avahi-utils
 #
 # create a new empty folder
 #
-cd /home
-mkdir tmp
-cd tmp
+mkdir -p /home/tmp
+cd /home/tmp
 
 #
 # install nodejs
@@ -55,15 +63,13 @@ tar Jxf $node_package_name
 #
 # install docker
 #
-wget $docker_download_path
-if [ $? != 0 ]
-then
-   echo "Download docker package failed!"
-   exit 120
-fi
-
-tar zxf $docker_package_name
-\cp -rf ./$docker_home_path/* $system_run_path/bin/
+apt-get update
+apt-get install apt-transport-https ca-certificates
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 F76221572C52609D
+echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" > /etc/apt/sources.list.d/docker.list
+apt-get update
+apt-get -y install linux-image-extra-$(uname -r) apparmor
+apt-get -y install docker-engine
 
 #
 # cleanup
@@ -71,21 +77,6 @@ tar zxf $docker_package_name
 cd ..
 rm -rf tmp
 
-#
-# add 'Restart=always' to /lib/systemd/system/avahi-daemon.service
-#
-IFS="
-"
-
-touch tmp.service
-
-for i in `cat /lib/systemd/system/avahi-daemon.service`
-do
-  echo $i >> tmp.service
-  if [ $i = "[Service]" ]
-  then
-    echo "Restart=always" >> tmp.service
-  fi
-done
-
-mv tmp.service /lib/systemd/system/avahi-daemon.service
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+systemctl disable docker
