@@ -90,7 +90,7 @@ echo "" >> /lib/systemd/system/appifi-bootstrap.service
 
 echo "[Service]" >> /lib/systemd/system/appifi-bootstrap.service
 echo "Type=idle" >> /lib/systemd/system/appifi-bootstrap.service
-echo "ExecStartPre=cp /wisnuc/bootstrap/appifi-bootstrap.js.sha1 /wisnuc/bootstrap/appifi-bootstrap.js" >> /lib/systemd/system/appifi-bootstrap.service
+echo "ExecStartPre=/bin/cp /wisnuc/bootstrap/appifi-bootstrap.js.sha1 /wisnuc/bootstrap/appifi-bootstrap.js" >> /lib/systemd/system/appifi-bootstrap.service
 echo "ExecStart=/usr/local/bin/node /wisnuc/bootstrap/appifi-bootstrap.js" >> /lib/systemd/system/appifi-bootstrap.service
 echo "TimeoutStartSec=3" >> /lib/systemd/system/appifi-bootstrap.service
 echo "Restart=always" >> /lib/systemd/system/appifi-bootstrap.service
